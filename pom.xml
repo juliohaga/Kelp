@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.juliohaga</groupId>
+    <groupId>com.github.juliohaga</groupId>
     <artifactId>kelp-core</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
@@ -36,6 +36,16 @@
                 </executions>
                 <configuration>
                     <jvmTarget>${java.version}</jvmTarget>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
         </plugins>
