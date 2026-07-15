@@ -13,7 +13,7 @@ class InstanceFactory(
         }
 
         val constructor = clazz.constructors.firstOrNull()
-            ?: error("Construtor não encontrado: ${clazz.simpleName}")
+            ?: error("Constructor not found: ${clazz.simpleName}")
 
 
         val args = constructor.parameterTypes.map {
@@ -27,7 +27,7 @@ class InstanceFactory(
 
                 else ->
                     error(
-                        "Dependência ${it.simpleName} faltando em ${clazz.simpleName}"
+                        "Missing dependency ${it.simpleName} in ${clazz.simpleName}"
                     )
             }
 

@@ -19,7 +19,7 @@ class DependencyContainer {
     @Suppress("UNCHECKED_CAST")
     fun <T> get(type: Class<T>): T {
         return instances[type.name] as? T
-            ?: error("Dependência ${type.simpleName} não encontrada")
+            ?: error("Dependency ${type.simpleName} not found")
     }
 
 }

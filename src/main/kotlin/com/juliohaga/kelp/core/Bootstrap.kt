@@ -21,7 +21,6 @@ class Bootstrap(
 
         val instanceFactory = InstanceFactory(container)
 
-        // Instancia e registra todos os @Component ANTES de qualquer listener/command
         scanner.getComponents().forEach { componentClass ->
 
             if (!container.contains(componentClass)) {
