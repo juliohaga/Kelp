@@ -3,6 +3,8 @@ package com.juliohaga.kelp.core.di
 import com.juliohaga.kelp.core.component.Component
 import com.juliohaga.kelp.core.discovery.ComponentScanner
 import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
+import java.lang.reflect.WildcardType
 
 class InstanceFactory(
     private val container: DependencyContainer,
@@ -30,7 +32,7 @@ class InstanceFactory(
                         genericType as ParameterizedType
 
                     val elementType =
-                        parameterized.actualTypeArguments[0] as Class<*>
+                        resolveClass(parameterized.actualTypeArguments[0])
 
                     scanner
                         .getComponentsOf(elementType)
@@ -75,6 +77,20 @@ class InstanceFactory(
 
         @Suppress("UNCHECKED_CAST")
         return instance as T
+    }
+
+    private fun resolveClass(type: Type): Class<*> {
+        return when (type) {
+            is Class<*> -> type
+            is ParameterizedType -> resolveClass(type.rawType)
+            is WildcardType -> {
+                // pega o upper bound (? extends Foo -> Foo)
+                val upper = type.upperBounds.firstOrNull()
+                    ?: error("Wildcard type has no resolvable upper bound $type")
+                resolveClass(upper)
+            }
+            else -> error("Generic type not suported: $type")
+        }
     }
 
     private fun isComponent(type: Class<*>): Boolean {
