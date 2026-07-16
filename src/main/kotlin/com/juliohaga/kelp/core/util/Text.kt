@@ -31,7 +31,9 @@ private val diacriticsRegex = Regex("\\p{Mn}+")
 
 
 fun String.colorize(): Component =
-    legacySerializer.deserialize(this)
+    legacySerializer.deserialize(
+        applySmallCapsTag()
+    )
         .decoration(TextDecoration.ITALIC, false)
 
 
@@ -84,3 +86,15 @@ fun String.toSmallCaps(): String =
         .stripAccents()
         .map { smallCapsMap[it] ?: it }
         .joinToString("")
+
+fun String.applySmallCapsTag(): String {
+
+    val regex = Regex("&s(.*?)(?=&[0-9a-fk-or]|$)")
+
+    return replace(regex) { match ->
+
+        match.groupValues[1]
+            .toSmallCaps()
+
+    }
+}
