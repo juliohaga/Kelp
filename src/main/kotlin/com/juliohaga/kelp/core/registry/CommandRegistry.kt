@@ -9,31 +9,25 @@ import org.bukkit.plugin.java.JavaPlugin
 class CommandRegistry(
     private val plugin: JavaPlugin,
     private val container: DependencyContainer,
-    private val scanner: ComponentScanner
+    private val scanner: ComponentScanner,
+    private val instanceFactory: InstanceFactory
 ) {
 
     fun register() {
 
-        val factory = InstanceFactory(container)
+        scanner.getCommands().forEach {
 
-        scanner.getCommands()
-            .forEach {
+            val command = instanceFactory.create(it)
 
-                val command =
-                    factory.create(it)
-                            as Command
+            plugin.getCommand(command.getCommand())
+                ?.apply {
 
+                    setExecutor(command)
 
-                plugin.getCommand(command.getCommand())
-                    ?.apply {
-
-                        setExecutor(command)
-
-                        command.getTabCompleter()
-                            ?.let {
-                                tabCompleter = it
-                            }
+                    command.getTabCompleter()?.let {
+                        tabCompleter = it
                     }
-            }
+                }
+        }
     }
 }

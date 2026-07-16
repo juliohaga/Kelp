@@ -9,18 +9,17 @@ import org.bukkit.plugin.java.JavaPlugin
 class ListenerRegistry(
     private val plugin: JavaPlugin,
     private val container: DependencyContainer,
-    private val scanner: ComponentScanner
+    private val scanner: ComponentScanner,
+    private val instanceFactory: InstanceFactory
 ) {
 
     fun register() {
-
-        val factory = InstanceFactory(container)
 
         scanner.getListeners()
             .forEach {
 
                 val listener =
-                    factory.create(it)
+                    instanceFactory.create(it)
                             as Listener
 
                 plugin.server.pluginManager

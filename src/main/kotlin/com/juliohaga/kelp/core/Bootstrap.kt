@@ -1,10 +1,10 @@
 package com.juliohaga.kelp.core
 
 import com.juliohaga.kelp.core.di.InstanceFactory
+import com.juliohaga.kelp.core.discovery.ComponentScanner
 import com.juliohaga.kelp.core.lifecycle.LifecycleManager
 import com.juliohaga.kelp.core.registry.CommandRegistry
 import com.juliohaga.kelp.core.registry.ListenerRegistry
-import com.juliohaga.kelp.core.discovery.ComponentScanner
 import org.bukkit.plugin.java.JavaPlugin
 
 class Bootstrap(
@@ -19,30 +19,42 @@ class Bootstrap(
 
         val container = scanner.createContainer()
 
-        val instanceFactory = InstanceFactory(container)
+        val instanceFactory = InstanceFactory(
+            container,
+            scanner
+        )
 
-        scanner.getComponents().forEach { componentClass ->
+        scanner.getComponents()
+            .forEach { componentClass ->
 
-            if (!container.contains(componentClass)) {
-                instanceFactory.create(componentClass)
+                if (!container.contains(componentClass)) {
+                    instanceFactory.create(componentClass)
+                }
+
             }
-        }
+
 
         lifecycle = LifecycleManager(container)
+
         lifecycle.enable()
+
 
         ListenerRegistry(
             plugin,
             container,
-            scanner
+            scanner,
+            instanceFactory
         ).register()
+
 
         CommandRegistry(
             plugin,
             container,
-            scanner
+            scanner,
+            instanceFactory
         ).register()
     }
+
 
     fun stop() {
 
@@ -52,4 +64,5 @@ class Bootstrap(
 
         lifecycle.disable()
     }
+
 }

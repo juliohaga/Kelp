@@ -1,7 +1,9 @@
 package com.juliohaga.kelp.core.discovery
 
+import com.juliohaga.kelp.core.command.Command
 import com.juliohaga.kelp.core.component.Component
 import com.juliohaga.kelp.core.di.DependencyContainer
+import org.bukkit.event.Listener
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import org.reflections.Reflections
@@ -24,9 +26,11 @@ class ComponentScanner(
                     )
                 )
                 .addClassLoaders(classLoader)
-                .addScanners(Scanners.TypesAnnotated, Scanners.SubTypes)
+                .addScanners(
+                    Scanners.TypesAnnotated,
+                    Scanners.SubTypes
+                )
         )
-
 
     fun createContainer(): DependencyContainer {
 
@@ -38,21 +42,42 @@ class ComponentScanner(
         return container
     }
 
-
     fun getComponents(): Set<Class<*>> {
+
         return reflections
             .getTypesAnnotatedWith(Component::class.java)
+
     }
 
+    @Suppress("UNCHECKED_CAST")
+    fun <T> getComponentsOf(type: Class<T>): Set<Class<out T>> {
 
-    fun getListeners() =
-        reflections.getSubTypesOf(
-            org.bukkit.event.Listener::class.java
+        return reflections
+            .getSubTypesOf(type)
+            .filter {
+                it.isAnnotationPresent(Component::class.java)
+            }
+            .map {
+                it as Class<out T>
+            }
+            .toSet()
+
+    }
+
+    fun getListeners(): Set<Class<out Listener>> {
+
+        return reflections.getSubTypesOf(
+            Listener::class.java
         )
 
+    }
 
-    fun getCommands() =
-        reflections.getSubTypesOf(
-            com.juliohaga.kelp.core.command.Command::class.java
+    fun getCommands(): Set<Class<out Command>> {
+
+        return reflections.getSubTypesOf(
+            Command::class.java
         )
+
+    }
+
 }
