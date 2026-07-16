@@ -1,15 +1,15 @@
 package com.juliohaga.kelp.core.item.meta
 
+import com.juliohaga.kelp.core.item.modifier.ItemModifier
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 
 
 class SkullMetaModifier(
     private val action: SkullMeta.() -> Unit
-) {
+) : ItemModifier {
 
-
-    fun apply(item: ItemStack) {
+    override fun apply(item: ItemStack) {
 
         item.editMeta(
             SkullMeta::class.java
@@ -20,5 +20,4 @@ class SkullMetaModifier(
         }
 
     }
-
 }

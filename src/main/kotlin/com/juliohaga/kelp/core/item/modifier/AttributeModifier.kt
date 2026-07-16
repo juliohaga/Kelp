@@ -2,7 +2,6 @@ package com.juliohaga.kelp.core.item.modifier
 
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
-import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
 class AttributeModifier(
@@ -15,7 +14,7 @@ class AttributeModifier(
 
         item.editMeta {
 
-            addAttributeModifier(
+            it.addAttributeModifier(
                 attribute,
                 modifier
             )

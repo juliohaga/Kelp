@@ -4,7 +4,7 @@ import io.papermc.paper.datacomponent.DataComponentType
 import org.bukkit.inventory.ItemStack
 
 
-class ComponentModifier<T>(
+class ComponentModifier<T : Any>(
     private val type: DataComponentType.Valued<T>,
     private val value: T
 ) : ItemModifier {

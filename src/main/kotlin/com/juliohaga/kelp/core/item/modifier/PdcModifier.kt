@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
 
-class PdcModifier<T, Z>(
+class PdcModifier<T : Any, Z : Any>(
     private val key: NamespacedKey,
     private val type: PersistentDataType<T, Z>,
     private val value: Z
